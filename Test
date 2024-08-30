@@ -1,0 +1,37 @@
+import { fileIo as fs } from '@kit.CoreFileKit';
+import { taskpool } from '@kit.ArkTS';
+
+@Concurrent
+function parseAsync(index: number, recordDir: string) {
+
+}
+
+function parseRecordDir(recordDir: string) {
+  let recordList: string[] = fs.listFileSync(recordDir);
+  let needAsyncCount = 0;
+  recordList.forEach((record: string) => {
+    if (needAsync(record)) {
+      needAsyncCount++;
+    } else {
+      //
+    }
+  })
+  for (let index = 0; index < needAsyncCount / 3; index++) {
+    setTimeout(() => {
+      taskpool.execute(parseAsync, index, recordDir)
+        .then((value: object) => {
+
+        })
+    }, index * 20000)
+  }
+}
+
+function needAsync(record: string) {
+  if (record.indexOf('cogTree') >= 0
+    || record.indexOf('godMap') >= 0
+    || record.indexOf('godRoad') >= 0
+  ) {
+    return true
+  }
+  return false
+}
